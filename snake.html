@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jogo da cobrinha</title>
+</head>
+<body>
+    <canvas id="stage" width="600" height="600"></canvas>
+    <script type="text/javascript">
+        window.onload = function(){
+
+            var stage = document.getElementById('stage');
+            var ctx = stage.getContext("2d");
+            document.addEventListener("keydown", keyPush);
+            setInterval(game, 80);
+
+            const vel_qtd_casas = 1;
+            var vel_x = vel_y = 0;
+            var ponto_cabeca_cobra_x =10;
+            var ponto_cabeca_cobra_y = 15;
+            var tamanho_peca = 30;
+            var quantidade_peca = 20;
+            var ponto_maca_x=ponto_maca_y=15;
+            var rastro = [];
+            tamanho_cobra = 5;
+
+            function game(){
+                ponto_cabeca_cobra_x += vel_x;
+                ponto_cabeca_cobra_y += vel_y;
+                if (ponto_cabeca_cobra_x <0) {
+                    ponto_cabeca_cobra_x = quantidade_peca-1;
+                }
+                if (ponto_cabeca_cobra_x > quantidade_peca-1) {
+                    ponto_cabeca_cobra_x = 0;
+                }
+                if (ponto_cabeca_cobra_y < 0) {
+                    ponto_cabeca_cobra_y = quantidade_peca-1;
+                }
+                if (ponto_cabeca_cobra_y > quantidade_peca-1) {
+                    ponto_cabeca_cobra_y = 0;
+                }
+
+                ctx.fillStyle = "black";
+                ctx.fillRect(0,0, stage.width, stage.height);
+ 
+                ctx.fillStyle = "red";
+                ctx.fillRect(ponto_maca_x*tamanho_peca, ponto_maca_y*tamanho_peca, tamanho_peca,tamanho_peca);
+ 
+                ctx.fillStyle = "grey";
+
+                for (var i = 0; i < rastro.length; i++) {
+                    ctx.fillRect(rastro[i].x*tamanho_peca, rastro[i].y*tamanho_peca, tamanho_peca-1,tamanho_peca-1);
+                    if (rastro[i].x == ponto_cabeca_cobra_x && rastro[i].y == ponto_cabeca_cobra_y)
+                    {
+                        vel_x = vel_y=0;
+                        tamanho_cobra =5;
+                    }
+                }
+
+                rastro.push({x:ponto_cabeca_cobra_x, y:ponto_cabeca_cobra_y })
+
+                while (rastro.length > tamanho_cobra) {
+                    rastro.shift();
+                }
+
+                if (ponto_maca_x==ponto_cabeca_cobra_x && ponto_maca_y==ponto_cabeca_cobra_y){
+                    tamanho_cobra++;
+                    ponto_maca_x = Math.floor(Math.random()*quantidade_peca);
+                    ponto_maca_y = Math.floor(Math.random()*quantidade_peca);
+                }
+            }
+
+            function keyPush(event){
+                switch (event.keyCode) {
+                    case 37: // Left
+                        vel_x = -vel_qtd_casas;
+                        vel_y = 0;
+                        break;
+                    case 38: // up
+                        vel_x = 0;
+                        vel_y = -vel_qtd_casas;
+                        break;
+                    case 39: // right
+                        vel_x = vel_qtd_casas;
+                        vel_y = 0;
+                        break;
+                    case 40: // down
+                        vel_x = 0;
+                        vel_y = vel_qtd_casas;
+                        break;          
+                    default:
+                        break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
